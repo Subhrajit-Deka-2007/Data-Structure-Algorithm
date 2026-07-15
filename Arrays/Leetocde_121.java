@@ -3,9 +3,9 @@ package Arrays;
 public class Leetocde_121
 {
     class Solution {
-        public int maxProfit(int[] prices)
+      /*  public int maxProfit(int[] prices)
         {
-        /*
+
         Brut force : Nested loop
 
         int diff = 0;
@@ -86,4 +86,4 @@ S.C = O (1)
         }
     }
 
-}
+
