@@ -3,54 +3,60 @@ import java.util.Arrays;
 public class lEETOCDE_567
 {
 
-    public boolean checkInclusion(String s1, String s2)
-    {
-        if (s1.length() > s2.length()) return false;
+    class Solution {
+        public boolean checkInclusion(String s1, String s2)
+        {
+            if (s1.length() > s2.length()) return false;
 
-        int[] arr1Freq = new int[26];
-        int[] arr2Freq = new int[26];
+            int[] arr1Freq = new int[26];
+            int[] arr2Freq = new int[26];
 
-        // Build s1's frequency array
-        for (int i = 0; i < s1.length(); i++) {
-            arr1Freq[s1.charAt(i) - 97]++;
-        }
+            // Build s1's frequency array
+            for (int i = 0; i < s1.length(); i++) {
+                arr1Freq[s1.charAt(i) - 97]++;
+            }
 
-        int i = 0;
-        int j = 0;
+            int i = 0;
+            int j = 0;
 
-        for (; j < s2.length(); ) {
+            for (; j < s2.length(); ) {
 
-            // Build the initial window (your original logic — kept as-is)
-            if (j - i + 1 <= s1.length()) {
-                arr2Freq[s2.charAt(j) - 97]++;
+                // Build the initial window (your original logic — kept as-is)
+                if (j - i + 1 <= s1.length()) {
+                    // these logic will only run till we didnot get our first window
+                    // after getting the first window it will be always be window size + 1
+                    // so if condition will never be hit after these
+                    arr2Freq[s2.charAt(j) - 97]++;
 
-                // check right here, once the window first reaches full size
-                if (j - i + 1 == s1.length() && Arrays.equals(arr1Freq, arr2Freq)) {
-                    return true;
+                    // check right here, once the window first reaches full size
+                    if (j - i + 1 == s1.length() && Arrays.equals(arr1Freq, arr2Freq)) {
+                        return true;
+                    }
+
+                    j++;
+                    continue;
                 }
 
+                // Slide: remove the character leaving from the left, add the new one entering at j
+                arr2Freq[s2.charAt(i) - 97]--;
+                i++;
+
+                arr2Freq[s2.charAt(j) - 97]++;
                 j++;
-                continue;
+
+
+                if (Arrays.equals(arr1Freq, arr2Freq)) {
+                    return true;
+                }
             }
-
-            // Slide: remove the character leaving from the left, add the new one entering at j
-            arr2Freq[s2.charAt(i) - 97]--;
-            i++;
-
-            arr2Freq[s2.charAt(j) - 97]++;
-            j++;
-
-            // Check after sliding
-            if (Arrays.equals(arr1Freq, arr2Freq)) {
-                return true;
-            }
-        }
         /*
         Time Complexity = O (N)
         Space Complexity = O (26 + 26 )
         */
 
-        return false;
+            return false;
+        }
+
     }
 /**
  * Instead of using Arrays.equal() we are maintaining a variable that represents how many characters are matching
@@ -62,6 +68,14 @@ public class lEETOCDE_567
  int[] arr1Freq = new int[26];
  int[] arr2Freq = new int[26];
  int matches = 0;
+
+ int matches = 0;
+ for (int k = 0; k < 26; k++) {
+ // checking out of 26 characters how many characters are same
+ if (arr1Freq[k] == 0) matches++;  // arr2Freq[k] is 0 at the start too, so they match
+ }
+
+
 
  // Build s1's frequency array
  for (int i = 0; i < s1.length(); i++) {
