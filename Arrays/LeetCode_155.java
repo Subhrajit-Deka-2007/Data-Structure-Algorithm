@@ -45,6 +45,8 @@ public class LeetCode_155
 /**
  Time Complexity = O(n)
  Space Complexity = O(k+k) where k = n only if there are n number of push operation
+ We are using two stacks  for minimum element we need to track its previous so we need a stack for it also
+
  */
     }
 
