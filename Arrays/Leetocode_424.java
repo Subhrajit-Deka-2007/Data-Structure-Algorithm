@@ -12,7 +12,7 @@ class Solution {
         /*
         Sliding Window :
         Algo : Things I will manage :
-        MaxFrequency  Number, A Frequnency Array  , MaxLength Variable
+        MaxFrequency  Number, A Frequency Array  , MaxLength Variable
 
         int [] arrFreq  = new int[26];
         int i = 0;
