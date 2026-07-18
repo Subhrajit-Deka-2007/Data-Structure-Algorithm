@@ -1,4 +1,4 @@
-package Stack;
+package Binary_Search;
 
 public class Leetocode_74
 {
