@@ -34,7 +34,7 @@ public class Leetcode_141
       */
         }
     /*
-    Better then my appraoch same time complexity but base case get's handle automatically
+    Better then my approach same time complexity but base case get's handle automatically
 
      public boolean hasCycle(ListNode head) {
         ListNode fast=head;
