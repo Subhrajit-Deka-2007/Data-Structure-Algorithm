@@ -74,6 +74,9 @@ class Twitter {
 postTweet: O(1)
 follow/unfollow: O(1)
 
-getNewsFeed: O(F log F) — where F = number of people followed, since the heap never holds more than F+1 entries at once, and we do up to 10 poll/offer cycles
+getNewsFeed: O(F log F) — where F = number of people followed,
+since the heap never holds more than F+1 entries at once, and we do up to 10 poll/offer cycles
+
+
 */
 }
