@@ -29,7 +29,7 @@ public class Leetcode_211
 
         public boolean search(String word)
         {
-
+           // The algo is BFS style on . we put all the things inside the set
             Set<TRIE_NODE> alive = new HashSet<>();
             alive.add(root);
 
@@ -59,6 +59,29 @@ public class Leetcode_211
         Map<Character, TRIE_NODE> children = new HashMap<>();
         boolean isEndOfWord = false;
     }
+    /**
+     * boolean searchHelper(String word, int index, TRIE_NODE node) {
+     * // These algo is DFS style on getting . we go in depth then we return
+     *     if (index == word.length()) {
+     *         return node.isEndOfWord;
+     *     }
+     *     char c = word.charAt(index);
+     *     if (c == '.') {
+     *         for (TRIE_NODE child : node.children.values()) {
+     *             if (searchHelper(word, index + 1, child)) {
+     *                 return true;   // dive fully down this branch before trying next
+     *             }
+     *         }
+     *         return false;
+     *     } else {
+     *         if (!node.children.containsKey(c)) return false;
+     *         return searchHelper(word, index + 1, node.children.get(c));
+     *     }
+     * }
+     */
+
+
+
 /**
  Summary
 

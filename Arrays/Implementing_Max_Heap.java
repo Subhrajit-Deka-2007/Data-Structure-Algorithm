@@ -9,15 +9,18 @@ public class Implementing_Max_Heap {
         int left = 2 * i + 1;
         int right = 2 * i + 2;
 
-        if (left < n && arr[left] > arr[largest]) {
+        if (left < n && arr[left] > arr[largest])
+        {
             largest = left;
         }
 
-        if (right < n && arr[right] > arr[largest]) {
+        if (right < n && arr[right] > arr[largest])
+        {
             largest = right;
         }
 
-        if (largest != i) {
+        if (largest != i)
+        {
             int temp = arr[i];
             arr[i] = arr[largest];
             arr[largest] = temp;
@@ -30,12 +33,14 @@ public class Implementing_Max_Heap {
         int n = arr.length;
 
         // build max heap
-        for (int i = n / 2 - 1; i >= 0; i--) {
+        for (int i = n / 2 - 1; i >= 0; i--)
+        {
             heapify(arr, n, i);
         }
 
         // extract elements one by one
-        for (int i = n - 1; i > 0; i--) {
+        for (int i = n - 1; i > 0; i--)
+        {
             int temp = arr[0];
             arr[0] = arr[i];
             arr[i] = temp;
@@ -44,7 +49,7 @@ public class Implementing_Max_Heap {
             // heapify reduced heap // we are trying to sort these in ascending order
             // we are putting the large value from the root and swap with that last index and then again used
             // heap algorithm on that [0 , n-2] to get the new root and again repeat the process
-            // and in the end we will have a sorted array so basically we are sorting the array
+            // and in the end we will have a sorted array so, basically we are sorting the array
             // Time Complexity = log(n-1)+log(n-2)+----+1 = n log n
 
 
