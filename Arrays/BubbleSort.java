@@ -1,4 +1,4 @@
-package DATA_STRUCTURE_AND_ALGORITHM.Arrays;
+package Arrays;
 
 public class BubbleSort
 {
