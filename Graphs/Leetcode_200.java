@@ -5,7 +5,7 @@ import java.util.Set;
 
 public class Leetcode_200
 {
-    public class UnionFind
+    class UnionFind
     {
 
         int[] parent;
