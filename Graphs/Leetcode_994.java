@@ -43,7 +43,49 @@ public class Leetcode_994
                 }
                 if (rottedAny) minutes++;
             }
-
+/**
+ * Here's the direct answer, isolated to just that one decision:
+ *
+ * ## The rule
+ * **Use the `size = queue.size()` loop pattern only when the problem asks you to count something that increases by exactly 1 per "round" of BFS** — minutes, distance, number of steps, levels.
+ *
+ * **Skip it when the problem only asks "can this be reached / is this connected"** — a yes/no or true/false answer, with no number attached.
+ *
+ * ## How to tell which one your problem is, before writing any code
+ * Ask yourself: **"Does my final answer need to be a number that represents *how far* or *how long*?"**
+ *
+ * - "How many **minutes** until all oranges rot?" → number → **use the loop**
+ * - "What is the **distance** to the nearest gate?" → number → **use the loop**
+ * - "**Can** water flow from this cell to the ocean?" → yes/no → **skip the loop**
+ * - "**Is** this region surrounded?" → yes/no → **skip the loop**
+ *
+ * ## What changes in the code, concretely
+ *
+ * **With the loop (need a count):**
+ * ```java
+ * while (!queue.isEmpty()) {
+ *     int size = queue.size();        // <-- this line only exists because you need to count rounds
+ *     for (int i = 0; i < size; i++) {
+ *         int[] curr = queue.poll();
+ *         // expand neighbors...
+ *     }
+ *     counter++;                       // <-- one increment per full round
+ * }
+ * ```
+ *
+ * **Without the loop (just reachability):**
+ * ```java
+ * while (!queue.isEmpty()) {
+ *     int[] curr = queue.poll();      // just poll one at a time, no batching
+ *     // expand neighbors...
+ * }
+ * // no counter anywhere — you just check a boolean array at the end
+ * ```
+ *
+ * ## Why it matters mechanically
+ * The `size = queue.size()` line's **only job** is to let you know **"I've finished processing everyone at the current distance, time to move to the next distance and bump my counter."** If you don't need to know *which* distance/round something was reached
+ * at — only *whether* it was reached at all — that bookkeeping serves no purpose, so it's dropped.
+ */
             return fresh == 0 ? minutes : -1;
         }
     }
