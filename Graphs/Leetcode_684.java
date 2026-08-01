@@ -1,5 +1,10 @@
 package Graphs;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
 public class Leetcode_684
 {
 
@@ -48,6 +53,7 @@ public class Leetcode_684
             }
         }
     }
+
 /*
 Let's break down exactly why it's **O(V²)** (or equivalently O(E×V), or O(n²)) for both versions.
 
@@ -143,5 +149,128 @@ Want me to walk through Union-Find next, or does this clear up the DFS/BFS compl
 */
 
 
+    /* DFS APPROACH */
+        public int[] findRedundantConnection(int[][] edges) {
+            int n = edges.length;
+            List<List<Integer>> graph = new ArrayList<>();
+            for (int i = 0; i <= n; i++) graph.add(new ArrayList<>());  // 1 to n, so size n+1
 
-}
+            for (int[] edge : edges) {
+                int u = edge[0], v = edge[1];
+
+                boolean[] visited = new boolean[n + 1];
+                if (connected(graph, u, v, visited)) {
+                    return edge;   // u and v already connected -> this edge creates the cycle
+                }
+
+                graph.get(u).add(v);
+                graph.get(v).add(u);
+            }
+            return new int[0];   // unreachable per problem constraints
+        }
+
+        private boolean connected(List<List<Integer>> graph, int src, int target, boolean[] visited) {
+            if (src == target) return true;
+            visited[src] = true;
+            for (int neighbor : graph.get(src)) {
+                if (!visited[neighbor]) {
+                    if (connected(graph, neighbor, target, visited)) return true;
+                }
+            }
+            return false;
+        }
+
+/*  Solving using BFS */
+
+        public int[] findRedundantConnection1(int[][] edges) {
+            int n = edges.length;
+            List<List<Integer>> graph = new ArrayList<>();
+            for (int i = 0; i <= n; i++) graph.add(new ArrayList<>());
+
+            for (int[] edge : edges) {
+                int u = edge[0], v = edge[1];
+
+                if (connectedBFS(graph, u, v, n)) {
+                    return edge;
+                }
+
+                graph.get(u).add(v);
+                graph.get(v).add(u);
+            }
+            return new int[0];
+        }
+
+        private boolean connectedBFS(List<List<Integer>> graph, int src, int target, int n) {
+            boolean[] visited = new boolean[n + 1];
+            Queue<Integer> queue = new LinkedList<>();
+            queue.offer(src);
+            visited[src] = true;
+
+            while (!queue.isEmpty()) {
+                int curr = queue.poll();
+                if (curr == target) return true;
+                for (int neighbor : graph.get(curr)) {
+                    if (!visited[neighbor]) {
+                        visited[neighbor] = true;
+                        queue.offer(neighbor);
+                    }
+                }
+            }
+            return false;
+        }
+    }
+/**
+ * For **this specific problem (684)**, here's the clean breakdown:
+ *
+ * ### The pattern
+ * ```
+ * for each edge (n edges total):
+ *     run DFS/BFS connectivity check   <- cost grows as graph grows
+ *     if connected: return this edge
+ *     else: add edge to graph
+ * ```
+ *
+ * ### Cost of one connectivity check
+ *
+ * At the point when you're processing the `k`-th edge, the graph built so far has:
+ * - up to `k` nodes involved
+ * - up to `2(k-1)` adjacency list entries (undirected, so 2× edges added so far)
+ *
+ * So checking connectivity at step `k` costs **O(k + 2(k-1)) ≈ O(k)**.
+ *
+ * ### Total across all edges
+ *
+ * ```
+ * k=1: O(1)
+ * k=2: O(2)
+ * k=3: O(3)
+ * ...
+ * k=n: O(n)
+ *
+ * Total = 1 + 2 + 3 + ... + n = n(n+1)/2  ≈ O(n²)
+ * ```
+ *
+ * ### Final Answer
+ *
+ * ```
+ * Time Complexity:  O(n²)      (equivalently O(V²), since V ≈ E ≈ n in this problem)
+ * Space Complexity: O(n)       (equivalently O(V))
+ * ```
+ *
+ * **Space breakdown:**
+ * ```
+ * adjacency list:        O(V + E) = O(n)
+ * visited[] array:       O(V) = O(n)     <- freshly allocated on EVERY check
+ * DFS recursion stack:   O(V) worst case = O(n)
+ * BFS queue:             O(V) worst case = O(n)
+ *
+ * Total space: O(n)
+ * ```
+ *
+ * Both DFS and BFS versions have the **same** time/space complexity here — O(n²) time, O(n) space — the only difference is *how* they traverse (recursive stack vs explicit queue), not the asymptotic cost.
+ *
+ * This confirms exactly what you were reasoning through earlier: unlike LeetCode 323 (where each node/edge is touched only once total, giving O(V+E)), problem 684 **repeats connectivity checks on a growing graph for every edge**, which is what pushes it to O(V²) / O(n²) — and
+ * is precisely the inefficiency Union-Find (O(n·α(n)) ≈ O(n)) is designed to eliminate.
+ */
+
+

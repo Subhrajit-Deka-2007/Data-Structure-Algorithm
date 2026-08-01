@@ -1,7 +1,9 @@
 package Graphs;
 
 import java.util.ArrayDeque;
+import java.util.HashSet;
 import java.util.Queue;
+import java.util.Set;
 
 /** Number of connected components in Undirected Graph
  *
@@ -67,9 +69,9 @@ public class Leetcode_323
         System.out.println(count);
 */
 
-            /**
+             /**
              * Solve using BFS
-*/
+
             if(!vis[i]) {
                 count += bfs(i, adjMatrix, vis);
             }
@@ -78,6 +80,17 @@ public class Leetcode_323
         }
 
         System.out.println(count);
+              */
+
+    }
+        /**
+         Solving Using Union Find
+         Time Complexity => E * Alpha(V)
+         Space Complexity => O(V+V) ~O(V) parent and size array
+         */
+
+        unionFind();
+
     }
 
     public  static int  dfs( int ele, int [][] adjMatrix , boolean[]vis )
@@ -86,7 +99,6 @@ public class Leetcode_323
         vis[ele]= true;
         for ( int i = 0; i < adjMatrix[0].length ; i++ )
         {
-
             if( ele == i )continue;
             else if ( !vis[i] && adjMatrix[ele][i]!=0 )dfs(i,adjMatrix,vis);
         }
@@ -121,9 +133,77 @@ public class Leetcode_323
     SPACE COMPLEXITY = O ( V{ ALL THE V-1 ELEMENTS IF THEY ARE CONNECTED TO ALL V-1 ELEMENTS } + V^2 {FOR ADJ MATRIX } )
 
      */
+
+public static void unionFind()
+{
+    int n = 5;
+    int [][] edges = {{0,1},{1,2},{3,4}};
+    UnionFind uf = new  UnionFind(n);
+
+
+    for( int [] edge : edges) uf.union( edge[0], edge[1]);
+
+    Set<Integer> s = new HashSet<>();
+
+    for ( int ele : uf.parent)s.add(ele);
+    s.size();
+    System.out.println(s.size());
+
 }
 
 
+
+}
+ class UnionFind
+{
+
+    int[] parent;
+    int[] size;
+
+    UnionFind(int n) {
+        parent = new int[n];
+        size = new int[n];
+        for (int i = 0; i < n; i++) {
+            parent[i] = i; // everyone is their own leader initially
+            size[i] = 1;
+        }
+    }
+
+    int find(int x) {
+        if (parent[x] != x) {
+            parent[x] = find(parent[x]); // path compression
+        }
+        return parent[x];
+    }
+
+    void union(int x, int y) {
+        int rootX = find(x);
+        int rootY = find(y);
+
+        if (rootX == rootY) return; // already same group
+
+        // union by size: attach smaller group under bigger group
+        if (size[rootX] < size[rootY]) {
+            parent[rootX] = rootY;
+            size[rootY] += size[rootX];
+        } else {
+            parent[rootY] = rootX;
+            size[rootX] += size[rootY];
+        }
+    }
+}
+
+
+
+
+
+/* We can also do it using union set /DSU
+Time Complexity =>Although we are using DSU the time complexity should be V*Alpha(E)
+Space Complexity =>O (V)
+ */
+
+
+/* Let's do it by Union Set */
 
 
 
