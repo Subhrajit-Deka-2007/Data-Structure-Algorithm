@@ -31,6 +31,12 @@ public class BellManFordAlgorithm
 
         return dist;
     }
+
+/*
+Bellman-Ford guarantees: if a node's shortest path requires at most k edges to achieve the minimum cost,
+then after round k finishes, that node's dist[] value will correctly show that minimum."
+ */
+
 }
 /**
   Time: O(V × E)
