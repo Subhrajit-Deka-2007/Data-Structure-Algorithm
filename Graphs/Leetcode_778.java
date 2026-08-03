@@ -1,9 +1,11 @@
 package Graphs;
 
+import java.util.PriorityQueue;
+
 public class Leetcode_778
 {
 
-    class Solution {
+
 
 
         private int minTime = Integer.MAX_VALUE;
@@ -87,7 +89,7 @@ public class Leetcode_778
 
             return -1; // unreachable, shouldn't happen per problem constraints
         }
-    }
+
 
 /*
 Backtracking (all paths):  O(4^(n²))       <- exponential, infeasible for n≥~5
@@ -95,8 +97,8 @@ DFS Appraoch : (Backtracking ): ---> O( (4^N^2)Space Complexity : O(N^2)
 Dijkstra-style (heap):     O(n² log n)      <- polynomial, runs fine even for n=50
 */
 
-    class Solution {
-        public int swimInWater(int[][] grid) {
+
+        public int swimInWater1(int[][] grid) {
             int n = grid.length;
             int lo = grid[0][0], hi = n * n - 1;
 
@@ -131,7 +133,7 @@ Dijkstra-style (heap):     O(n² log n)      <- polynomial, runs fine even for n
             }
             return false;
         }
-    }
+
 /**
  Here's the complete solution, followed by the full complexity derivation.
 
