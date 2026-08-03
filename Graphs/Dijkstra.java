@@ -130,6 +130,76 @@ public class Dijkstra
         }
         return dist;
     }
+
+
+
+    /** Writing the code with visited array
+     public int[] dijkstra(int n, int[][] edges, int src)
+     {
+     List<List<int[]>> graph = new ArrayList<>();
+     for (int i = 0; i < n; i++) graph.add(new ArrayList<>());
+     for (int[] e : edges) graph.get(e[0]).add(new int[]{e[1], e[2]});
+
+     int[] dist = new int[n];
+     Arrays.fill(dist, Integer.MAX_VALUE);
+     dist[src] = 0;
+
+     boolean[] visited = new boolean[n];
+
+     PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[0] - b[0]);
+     pq.offer(new int[]{0, src});
+
+     while (!pq.isEmpty()) {
+     int[] curr = pq.poll();
+     int d = curr[0], node = curr[1];
+
+     if (visited[node]) continue;   // <-- replaces "if (d > dist[node]) continue;"
+     visited[node] = true;          // <-- lock this node in as finalized
+
+     for (int[] neighbor : graph.get(node)) {
+     int next = neighbor[0], weight = neighbor[1];
+     if (!visited[next] && dist[node] + weight < dist[next]) {
+     dist[next] = dist[node] + weight;
+     pq.offer(new int[]{dist[next], next});
+     }
+     }
+     }
+     return dist;
+     }
+
+
+     3. Time and Space Complexity
+
+     Both variants have the same asymptotic complexity — the visited array doesn't change the underlying cost structure, since Java's PriorityQueue has no decrease-key support either way; both push duplicate entries per relaxation.
+
+     Time: O((V + E) log V)
+
+     Building the adjacency list: O(V + E)
+     Each edge can trigger at most one successful relaxation → at most one offer() per edge → at most O(E) pushes total
+     Each PQ push/pop costs O(log(queue size)) = O(log E). Since a simple graph has E ≤ V², log E = O(log V)
+     So total PQ work: O(E log V)
+     Combined: O((V + E) log V)
+
+     Space: O(V + E)
+
+     Adjacency list: O(V + E)
+     dist[] array: O(V)
+     PQ, worst case (due to duplicate stale entries in both variants): O(E)
+     visited[] array (non-lazy version only): O(V) — negligible extra, doesn't change the overall order
+
+
+
+     . The two variants
+
+     Lazy Deletion (original)	Visited Array
+     Stale-check	if (d > dist[node]) continue;	if (visited[node]) continue; then visited[node] = true;
+     How it finalizes a node	Implicitly — trusts that once the smallest dist[node] is popped, it won't improve further	Explicitly — locks the node the instant it's popped
+     Duplicate PQ entries?	Yes — old, stale (dist, node) pairs stay in the PQ until popped and discarded	Yes, still — offer() is called the same way; duplicates still pile up, visited[] just blocks re-processing, not re-insertion
+
+
+     
+
+     */
 }
 /**
  * Let's do this fully step by step, using the 5-node complete graph as our concrete anchor.
