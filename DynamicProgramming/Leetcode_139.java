@@ -503,6 +503,12 @@ Total complexity
 Time:  O(W + n·L)
 Space: O(W · 26)  for the Trie   +   O(n) for dp[]
      = O(26W + n)
+
+
+
+
+Time: O(n × m) — where n = length of s, m = max word length in dict (bounds the inner loop's useful depth)
+Space: O(total characters in wordDict) for the Trie, + O(n) for dp[]
 */
 
 
