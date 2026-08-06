@@ -3,6 +3,25 @@ package DynamicProgramming;
 public class Leetcode_416
 {
 
+    public boolean canPartition(int[] nums) {
+        int totalSum = 0;
+        for (int num : nums) totalSum += num;
+        if (totalSum % 2 != 0) return false; // odd sum can never split evenly
+        int target = totalSum / 2;
+        return solve(nums, 0, target);
+    }
+
+    private boolean solve(int[] nums, int i, int target) {
+        if (target == 0) return true;
+        if (i == nums.length || target < 0) return false;
+        return solve(nums, i + 1, target - nums[i])   // include
+                || solve(nums, i + 1, target);            // exclude
+    }
+
+
+
+
+
     class Solution {
         public boolean canPartition(int[] nums) {
             return tabulation(nums);
@@ -111,6 +130,70 @@ public class Leetcode_416
             }
 
             return dp[target];
+/**
+ *  /*
+ *     Yes — here’s the **memory-friendly version**:
+ *
+ * When we process a number `num`, we are trying to form new sums by doing:
+ *
+ * ```text
+ * old_sum + num = new_sum
+ * ```
+ *
+ * So for each `new_sum`, the previous sum must be:
+ *
+ * ```text
+ * old_sum = new_sum - num
+ * ```
+ *
+ * That is why the loop only goes down to `num`: if `new_sum < num`, then `new_sum - num` becomes negative, and a negative previous sum is impossible.
+ *
+ * We go from `target` down to `num` because we must use the **old** `dp` values, not the ones just updated by the same number. If we go upward, the current number can accidentally help create a sum and then be used again immediately, which would mean using the same element twice.
+ *
+ * ## Easy way to remember
+ *
+ * - **Lower bound = `num`** because smaller sums cannot include `num`.
+ * - **Go backward** because you want each number counted **once**, not reused in the same loop.
+ *
+ * ## Short example
+ *
+ * If `num = 5`:
+ *
+ * - `dp[5]` comes from `dp[0] + 5`
+ * - `dp[10]` would come from `dp[5] + 5`
+ *
+ * If you go upward, `dp[5]` gets set first, and then `dp[10]` wrongly uses that same newly set `dp[5]`.
+ * If you go backward, `dp[10]` checks the old `dp[5]` before `dp[5]` is updated, so reuse does not happen.
+ *
+ * If you want, I can turn this into a 2-line interview answer you can memorize.
+ *
+ *
+ *
+ * Each cell `dp[t]` means: **can we make sum `t` using some of the numbers we have processed so far?**
+ *
+ * ## Meaning
+ *
+ * - `dp[0] = true` because sum `0` is always possible by choosing nothing.
+ * - `dp[5] = true` means some subset of the numbers seen so far adds up to `5`.
+ * - `dp[11] = true` means some subset adds up to `11`.
+ *
+ * ## In one sentence
+ *
+ * `dp[t]` is a yes/no answer for whether sum `t` is currently reachable.
+ *
+ * ## Example
+ *
+ * If we have processed `[1, 5]`, then:
+ *
+ * - `dp[1] = true` means we can make `1`
+ * - `dp[5] = true` means we can make `5`
+ * - `dp[6] = true` means we can make `6` using `1 + 5`
+ *
+ * So the array is just tracking which sums are possible at each step.
+ *
+ * If you want, I can now combine everything into one final simple explanation of the whole algorithm.
+ * 
+  */
         }
 /*
 Approach	                 Time	        Space	               Notes
