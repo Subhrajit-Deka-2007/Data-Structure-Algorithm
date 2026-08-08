@@ -107,4 +107,40 @@ public class Leetcode_115
 
  */
 
+
+
+public int maxCoins(int[] nums) {
+    int n = nums.length;
+    int[] balloons = new int[n + 2];
+    balloons[0] = 1;
+    balloons[n + 1] = 1;
+    for (int i = 0; i < n; i++) {
+        balloons[i + 1] = nums[i];
+    }
+
+    // memo[i][j] = answer for solve(i, j); -1 means "not computed yet"
+    int[][] memo = new int[n + 2][n + 2];
+    for (int[] row : memo) Arrays.fill(row, -1);
+
+    return solve(balloons, 0, n + 1, memo);
+}
+
+    private int solve(int[] b, int i, int j, int[][] memo) {
+        if (j == i + 1) return 0;               // base case, same as before
+
+        if (memo[i][j] != -1) return memo[i][j]; // ← the ONLY new logic
+
+        int best = 0;
+        for (int k = i + 1; k < j; k++) {
+            int total = solve(b, i, k, memo)
+                    + solve(b, k, j, memo)
+                    + b[i] * b[k] * b[j];
+            best = Math.max(best, total);
+        }
+
+        memo[i][j] = best;                       // ← cache before returning
+        return best;
+    }
+
+
 }
