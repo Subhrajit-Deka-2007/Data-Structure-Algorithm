@@ -2,69 +2,71 @@ package DynamicProgramming;
 
 public class Leetcode_10
 {
-    class Solution
-    {
-        public boolean isMatch0(String s, String p) {
-            return solve(s, p, 0, 0);
+
+}
+class Solution1
+{
+    public boolean isMatch0(String s, String p) {
+        return solve0(s, p, 0, 0);
+    }
+
+    private boolean solve0(String s, String p, int i, int j) {
+        // Base case: pattern exhausted — valid only if s is ALSO exhausted
+        if (j == p.length()) {
+            return i == s.length();
         }
 
-        private boolean solve(String s, String p, int i, int j) {
-            // Base case: pattern exhausted — valid only if s is ALSO exhausted
-            if (j == p.length()) {
-                return i == s.length();
-            }
+        // Does the character right here even count as a match?
+        boolean firstMatch = (i < s.length()) &&
+                (p.charAt(j) == s.charAt(i) || p.charAt(j) == '.');
 
-            // Does the character right here even count as a match?
-            boolean firstMatch = (i < s.length()) &&
-                    (p.charAt(j) == s.charAt(i) || p.charAt(j) == '.');
-
-            if (j + 1 < p.length() && p.charAt(j + 1) == '*') {
-                // p[j] is repeatable
-                return solve(s, p, i, j + 2)                      // Option A: use zero times
-                        || (firstMatch && solve(s, p, i + 1, j));      // Option B: use one more time
-            } else {
-                // p[j] is a one-shot character, forced match
-                return firstMatch && solve(s, p, i + 1, j + 1);
-            }
+        if (j + 1 < p.length() && p.charAt(j + 1) == '*') {
+            // p[j] is repeatable
+            return solve0(s, p, i, j + 2)                      // Option A: use zero times
+                    || (firstMatch && solve0(s, p, i + 1, j));      // Option B: use one more time
+        } else {
+            // p[j] is a one-shot character, forced match
+            return firstMatch && solve0(s, p, i + 1, j + 1);
+        }
     /*
     Time Complexity = O( 2^(M+N))
     Space Complexity = O(M+N)=> Recursive Stack
     */
+    }
+
+
+
+    public boolean isMatch(String s, String p) {
+        // Memo Table
+        int m = s.length(), n = p.length();
+        // memo[i][j]: 0 = not computed, 1 = true, 2 = false
+        int[][] memo = new int[m + 1][n + 1];
+        return solve(s, p, 0, 0, memo);
+    }
+
+    private boolean solve(String s, String p, int i, int j, int[][] memo) {
+        if (memo[i][j] != 0) {
+            return memo[i][j] == 1;
         }
 
+        boolean result;
 
+        if (j == p.length()) {
+            result = (i == s.length());
+        } else {
+            boolean firstMatch = (i < s.length()) &&
+                    (p.charAt(j) == s.charAt(i) || p.charAt(j) == '.');
 
-        public boolean isMatch1(String s, String p) {
-            // Memo Table
-            int m = s.length(), n = p.length();
-            // memo[i][j]: 0 = not computed, 1 = true, 2 = false
-            int[][] memo = new int[m + 1][n + 1];
-            return solve(s, p, 0, 0, memo);
-        }
-
-        private boolean solve(String s, String p, int i, int j, int[][] memo) {
-            if (memo[i][j] != 0) {
-                return memo[i][j] == 1;
-            }
-
-            boolean result;
-
-            if (j == p.length()) {
-                result = (i == s.length());
+            if (j + 1 < p.length() && p.charAt(j + 1) == '*') {
+                result = solve(s, p, i, j + 2, memo)
+                        || (firstMatch && solve(s, p, i + 1, j, memo));
             } else {
-                boolean firstMatch = (i < s.length()) &&
-                        (p.charAt(j) == s.charAt(i) || p.charAt(j) == '.');
-
-                if (j + 1 < p.length() && p.charAt(j + 1) == '*') {
-                    result = solve(s, p, i, j + 2, memo)
-                            || (firstMatch && solve(s, p, i + 1, j, memo));
-                } else {
-                    result = firstMatch && solve(s, p, i + 1, j + 1, memo);
-                }
+                result = firstMatch && solve(s, p, i + 1, j + 1, memo);
             }
+        }
 
-            memo[i][j] = result ? 1 : 2;
-            return result;
+        memo[i][j] = result ? 1 : 2;
+        return result;
 /*
 Total time = (number of distinct states) × (work per state)
            = O(m×n) × O(1)
@@ -77,33 +79,33 @@ Since m×n dominates m+n for any reasonably-sized inputs:
 
 S(m,n)=O(m×n)
 */
-        }
+    }
 
 
-        public boolean isMatch3(String s, String p) {
-            int m = s.length(), n = p.length();
-            boolean[][] dp = new boolean[m + 1][n + 1];
+    public boolean isMatch2(String s, String p) {
+        int m = s.length(), n = p.length();
+        boolean[][] dp = new boolean[m + 1][n + 1];
 
-            // Base case: empty s matches empty p
-            dp[m][n] = true;
+        // Base case: empty s matches empty p
+        dp[m][n] = true;
 
-            // Fill from bottom-right corner backward to top-left
-            for (int i = m; i >= 0; i--) {
-                for (int j = n - 1; j >= 0; j--) {
-                    boolean firstMatch = (i < m) &&
-                            (p.charAt(j) == s.charAt(i) || p.charAt(j) == '.');
+        // Fill from bottom-right corner backward to top-left
+        for (int i = m; i >= 0; i--) {
+            for (int j = n - 1; j >= 0; j--) {
+                boolean firstMatch = (i < m) &&
+                        (p.charAt(j) == s.charAt(i) || p.charAt(j) == '.');
 
-                    if (j + 1 < n && p.charAt(j + 1) == '*') {
-                        dp[i][j] = dp[i][j + 2] || (firstMatch && dp[i + 1][j]);
-                    } else {
-                        dp[i][j] = firstMatch && dp[i + 1][j + 1];
-                    }
+                if (j + 1 < n && p.charAt(j + 1) == '*') {
+                    dp[i][j] = dp[i][j + 2] || (firstMatch && dp[i + 1][j]);
+                } else {
+                    dp[i][j] = firstMatch && dp[i + 1][j + 1];
                 }
             }
-
-            return dp[0][0];
         }
+
+        return dp[0][0];
     }
+}
 /*
 # LC 10: Regular Expression Matching — Complete Summary
 
@@ -237,4 +239,3 @@ public boolean isMatch(String s, String p) {
 
 **Key contrast with LC 312 (Burst Balloons):** there, each state's own computation involved a `for` loop over a third variable `k`, making per-state work `O(n)` and total `O(n³)`. Here, there's no such inner loop — each state resolves in `O(1)` via at most 2 direct recursive/lookup calls — so the complexity stays at `O(m×n)`, one power lower.
 */
-}
