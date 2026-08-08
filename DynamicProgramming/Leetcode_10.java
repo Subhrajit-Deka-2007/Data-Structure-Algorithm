@@ -4,7 +4,7 @@ public class Leetcode_10
 {
 
 }
-class Solution1
+class Solution2
 {
     public boolean isMatch0(String s, String p) {
         return solve0(s, p, 0, 0);
